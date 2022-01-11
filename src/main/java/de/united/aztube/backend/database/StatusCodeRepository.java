@@ -11,6 +11,4 @@ public interface StatusCodeRepository extends CrudRepository<StatusDB, Integer> 
     @Override
     List<StatusDB> findAll();
 
-
-
 }

@@ -10,20 +10,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLOutput;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @EnableScheduling
 @RequestMapping(path = "api/v1/qr")
-public class Controller {
+public class BrowserExtensionController {
 
     @Autowired
     StatusCodeRepository repository;
@@ -52,10 +46,12 @@ public class Controller {
     @GetMapping(path = "/checkTimeout")
     public void checkTimestamp() {
         List<StatusDB> statusDB = repository.findAll().
-                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > 30000))
+                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > 30000)
+                        && x.getStatus().equals("generated"))
                 .collect(Collectors.toList());
 
-        statusDB.forEach(x -> {repository.deleteById(x.getId());});
+        statusDB.forEach(x -> {repository.deleteById(x.getId());
+            System.out.println("entry number: " + x.getId() + " timed out");});
     }
 
 
