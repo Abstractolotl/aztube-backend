@@ -16,6 +16,12 @@ public class RegisterDB implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String sql = "INSERT INTO test01db (browserToken, deviceToken) VALUES (?,?)";
-        template.update(sql, "testBrowserToken2", "testDeviceToken2");
+        template.update(sql, "testBrowserToken3", "testDeviceToken3");
+    }
+
+    public String checkStatus(String code)  {
+        String test = String.valueOf(template.queryForRowSet("SELECT status FROM registerDB WHERE code EQUALS"+ code));
+        System.out.println(test);
+        return test;
     }
 }
