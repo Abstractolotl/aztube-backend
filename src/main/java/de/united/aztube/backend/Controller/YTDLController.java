@@ -1,13 +1,13 @@
 package de.united.aztube.backend.Controller;
 
 import de.united.aztube.backend.CodeGenerator;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import de.united.aztube.backend.Model.RegisterRequest;
+import de.united.aztube.backend.Model.RegisterResponse;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "api/v1/ytdl")
 public class YTDLController {
 
     @GetMapping(path = "/dosomething")
@@ -15,6 +15,13 @@ public class YTDLController {
     String doSomething() {
         System.out.println("Hello from Spring backend");
         return "Hello Frontend";
+    }
+
+    @GetMapping(path = "/register")
+    public @ResponseBody
+    RegisterResponse register(@RequestBody RegisterRequest request) {
+        RegisterResponse response = new RegisterResponse(true, "", UUID.randomUUID());
+        return response;
     }
 
 }
