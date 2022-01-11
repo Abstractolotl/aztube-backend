@@ -1,22 +1,13 @@
 package de.united.aztube.backend;
 
-import de.united.aztube.backend.database.RegisterDB;
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class StatusResponse {
-    String status;
-    String code;
+    private String status;
 
-    public StatusResponse() {}
-
-    @Autowired
-    RegisterDB registerDB;
-
-    public void setCode(String code) {
-        this.code = code;
+    public StatusResponse(String status) {
+        this.status = status;
     }
 
     public String getStatus() {
-        return registerDB.checkStatus(code);
+        return this.status;
     }
 }

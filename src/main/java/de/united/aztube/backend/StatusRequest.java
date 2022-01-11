@@ -8,11 +8,11 @@ public class StatusRequest {
         this.code = code;
     }
 
-    public String getCode() {
-        return code;
+    public StatusRequest() {
+
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public String getCode() {
+        return code;
     }
 }
