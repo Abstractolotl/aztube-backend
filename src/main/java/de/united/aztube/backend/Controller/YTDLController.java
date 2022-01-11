@@ -11,7 +11,7 @@ public class YTDLController {
 
     @GetMapping(path = "/dosomething")
     public void doSomething() {
-        System.out.println("Hello from Srping backend");
+        System.out.println("Hello from Spring backend");
     }
 
 }
