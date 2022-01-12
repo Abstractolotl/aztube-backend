@@ -6,6 +6,7 @@ public class DownloadRequest {
     private String videoID;
     private String quality;
     private String filename;
+    private String author;
 
     public DownloadRequest() {
     }
@@ -47,5 +48,13 @@ public class DownloadRequest {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

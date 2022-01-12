@@ -86,9 +86,10 @@ public class BrowserExtensionController {
     DownloadResponse download(@RequestBody DownloadRequest request) {
         Download download = new Download();
         download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
-        download.setFilename(request.getFilename());
+        download.setTitle(request.getFilename());
         download.setQuality(request.getQuality());
         download.setVideoID(request.getVideoID());
+        download.setAuthor(request.getAuthor());
         downloadRepository.save(download);
         return new DownloadResponse(true, null);
     }

@@ -12,17 +12,18 @@ public class Download {
     private String deviceToken;
     private String videoID;
     private String quality;
-    private String filename;
+    private String title;
+    private String author;
 
     public Download() {
     }
 
-    public Download(int id, String deviceToken, String videoID, String quality, String filename) {
+    public Download(int id, String deviceToken, String videoID, String quality, String title) {
         this.id = id;
         this.deviceToken = deviceToken;
         this.videoID = videoID;
         this.quality = quality;
-        this.filename = filename;
+        this.title = title;
     }
 
     public int getId() {
@@ -57,12 +58,20 @@ public class Download {
         this.quality = quality;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getTitle() {
+        return title;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }
 
