@@ -8,15 +8,15 @@ public class PollResponse {
 
     boolean success;
     private String error;
-    private List<Download> download;
+    private List<Download> downloads;
 
     public PollResponse() {
     }
 
-    public PollResponse(boolean success, List<Download> download, String error) {
+    public PollResponse(boolean success, List<Download> downloads, String error) {
         this.success = success;
         this.error = error;
-        this.download = download;
+        this.downloads = downloads;
     }
 
     public boolean isSuccess() {
@@ -36,10 +36,10 @@ public class PollResponse {
     }
 
     public List<Download> getDownload() {
-        return download;
+        return downloads;
     }
 
-    public void setDownload(List<Download> download) {
-        this.download = download;
+    public void setDownload(List<Download> downloads) {
+        this.downloads = downloads;
     }
 }
