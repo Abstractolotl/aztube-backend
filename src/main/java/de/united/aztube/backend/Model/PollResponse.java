@@ -13,7 +13,7 @@ public class PollResponse {
     public PollResponse() {
     }
 
-    public PollResponse(boolean success, List<Download> downloadRequests, String error) {
+    public PollResponse(boolean success, List<Download> download, String error) {
         this.success = success;
         this.error = error;
         this.download = download;
