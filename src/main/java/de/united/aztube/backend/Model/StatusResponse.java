@@ -11,11 +11,12 @@ public class StatusResponse {
     private UUID browserToken;
     private String deviceName;
 
-    public StatusResponse(String status, UUID browserToken, String deviceName) {
+    public StatusResponse(String status, UUID browserToken, String deviceName, String error) {
         this.status = status;
         this.browserToken = browserToken;
         this.deviceName = deviceName;
         this.success = true;
+        this.error = error;
     }
 
     public boolean isSuccess() {

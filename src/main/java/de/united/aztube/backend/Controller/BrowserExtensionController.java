@@ -39,12 +39,12 @@ public class BrowserExtensionController {
         StatusDB entry = repository.findByCode(request.getCode().toString());
         if(entry == null) {
             //TODO:
-            return null;
+            return new RegisterResponse(false, "no such entry", null);
         }
 
         if(!entry.getStatus().equals("generated")) {
             //TODO:
-            return null;
+            return new RegisterResponse(false, "browser token is already registered", null);
         }
 
         UUID deviceToken = UUID.randomUUID();
@@ -62,22 +62,22 @@ public class BrowserExtensionController {
         StatusDB statusDB = repository.findByCode(request.getCode());
         if(statusDB == null){
             //TODO:
-            return null;
+            return new StatusResponse(null, null, null, "no entry in database");
         }
 
         if(statusDB.getStatus().equals("registered")) {
             UUID browserToken = UUID.randomUUID();
             if(statusDB.getDeviceToken() == null || statusDB.getDeviceName() == null || statusDB.getDeviceName().trim().equals("")) {
                 //TODO: Integrity error
-                return null;
+                return new StatusResponse(null, null, null, "Integrity error");
             }
             Link link = new Link(browserToken.toString(), statusDB.getDeviceToken(), statusDB.getDeviceName(), System.currentTimeMillis());
             linkRepository.save(link);
 
-            return new StatusResponse(statusDB.getStatus(), browserToken, statusDB.getDeviceName());
+            return new StatusResponse(statusDB.getStatus(), browserToken, statusDB.getDeviceName(), null);
         }
 
-        StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "");
+        StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "", null);
         return response;
     }
 
@@ -97,8 +97,8 @@ public class BrowserExtensionController {
     @PostMapping(path = "/poll")
     public @ResponseBody
     PollResponse download(@RequestBody PollRequest request) {
-
-        return new PollResponse();
+        DownloadRequest[] downloadRequest = downloadRepository.findByDeviceToken(request.getDeviceToken());
+        return new PollResponse(true, downloadRequest, null);
     }
 
     @Scheduled(fixedDelay = 1000)
