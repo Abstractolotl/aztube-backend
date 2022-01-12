@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -108,8 +109,7 @@ public class BrowserExtensionController {
     @PostMapping(path = "/poll")
     public @ResponseBody
     PollResponse download(@RequestBody PollRequest request) {
-        DownloadRequest[] downloadRequest = downloadRepository.findByDeviceToken(request.getDeviceToken());
-        return new PollResponse(true, downloadRequest, null);
+        return null;
     }
 
     @Scheduled(fixedDelay = 1000)
