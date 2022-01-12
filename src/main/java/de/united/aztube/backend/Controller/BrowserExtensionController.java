@@ -107,7 +107,7 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/poll")
     public @ResponseBody
-    PollResponse download(@RequestBody PollRequest request) {
+    PollResponse downloads(@RequestBody PollRequest request) {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
         downloadRepository.findAll()
                 .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
