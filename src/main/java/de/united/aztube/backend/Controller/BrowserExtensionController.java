@@ -97,8 +97,7 @@ public class BrowserExtensionController {
     @PostMapping(path = "/poll")
     public @ResponseBody
     PollResponse download(@RequestBody PollRequest request) {
-        DownloadRequest[] downloadRequest = downloadRepository.findByDeviceToken(request.getDeviceToken());
-        return new PollResponse(true, downloadRequest, null);
+        return null;
     }
 
     @Scheduled(fixedDelay = 1000)
