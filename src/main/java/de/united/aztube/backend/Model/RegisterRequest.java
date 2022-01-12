@@ -9,7 +9,9 @@ public class RegisterRequest {
     public RegisterRequest(UUID code) {
         this.code = code;
     }
+
     public RegisterRequest() {
+
     }
 
     public UUID getCode() {
@@ -19,6 +21,7 @@ public class RegisterRequest {
     public void setCode(UUID code) {
         this.code = code;
     }
+
 }
 
 

@@ -62,4 +62,5 @@ public class StatusDB implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
