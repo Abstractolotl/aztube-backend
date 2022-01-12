@@ -3,12 +3,20 @@ package de.united.aztube.backend.Controller;
 import de.united.aztube.backend.CodeGenerator;
 import de.united.aztube.backend.Model.RegisterRequest;
 import de.united.aztube.backend.Model.RegisterResponse;
+import de.united.aztube.backend.StatusRequest;
+import de.united.aztube.backend.StatusResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 public class YTDLController {
+
+    @GetMapping(path = "/generate")
+    public CodeGenerator getCode() {
+        CodeGenerator codeGenerator = new CodeGenerator();
+        return codeGenerator;
+    }
 
     @GetMapping(path = "/dosomething")
     public @ResponseBody
@@ -23,5 +31,13 @@ public class YTDLController {
         RegisterResponse response = new RegisterResponse(true, "", UUID.randomUUID());
         return response;
     }
+
+    @PostMapping(path = "/status")
+    public void getResponse(@RequestBody StatusRequest request) {
+        StatusResponse response = new StatusResponse();
+        response.setCode(request.getCode());
+        System.out.println(response.getStatus());
+    }
+
 
 }
