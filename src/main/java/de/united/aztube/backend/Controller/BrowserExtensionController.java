@@ -1,8 +1,8 @@
 package de.united.aztube.backend.Controller;
 
-import de.united.aztube.backend.CodeGenerator;
-import de.united.aztube.backend.StatusRequest;
-import de.united.aztube.backend.StatusResponse;
+import de.united.aztube.backend.Model.GenerateRespose;
+import de.united.aztube.backend.Model.StatusRequest;
+import de.united.aztube.backend.Model.StatusResponse;
 import de.united.aztube.backend.database.StatusDB;
 import de.united.aztube.backend.database.StatusCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +19,21 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "api/v1/qr")
 public class BrowserExtensionController {
 
+    int timeout = 30;
+
     @Autowired
     StatusCodeRepository repository;
 
     @GetMapping(path = "/generate")
-    public CodeGenerator getCode() {
+    public GenerateRespose getCode() {
         StatusDB statusDB = new StatusDB();
-        CodeGenerator codeGenerator = new CodeGenerator();
-        statusDB.setCode(codeGenerator.getUuid());
+        GenerateRespose generateRespose = new GenerateRespose(timeout);
+        statusDB.setCode(generateRespose.getUuid());
         Date date = new Date();
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus("generated");
         repository.save(statusDB);
-        return codeGenerator;
+        return generateRespose;
     }
 
     @PostMapping(path = "/status")
@@ -46,7 +48,7 @@ public class BrowserExtensionController {
     @GetMapping(path = "/checkTimeout")
     public void checkTimestamp() {
         List<StatusDB> statusDB = repository.findAll().
-                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > 30000)
+                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000))
                         && x.getStatus().equals("generated"))
                 .collect(Collectors.toList());
 

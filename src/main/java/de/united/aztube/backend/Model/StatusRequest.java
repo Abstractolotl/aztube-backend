@@ -1,4 +1,4 @@
-package de.united.aztube.backend;
+package de.united.aztube.backend.Model;
 
 
 public class StatusRequest {

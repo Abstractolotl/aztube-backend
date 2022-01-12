@@ -1,4 +1,4 @@
-package de.united.aztube.backend;
+package de.united.aztube.backend.Model;
 
 public class StatusResponse {
     private String status;

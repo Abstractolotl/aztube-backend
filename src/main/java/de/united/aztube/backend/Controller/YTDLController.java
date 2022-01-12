@@ -1,10 +1,7 @@
 package de.united.aztube.backend.Controller;
 
-import de.united.aztube.backend.CodeGenerator;
 import de.united.aztube.backend.Model.RegisterRequest;
 import de.united.aztube.backend.Model.RegisterResponse;
-import de.united.aztube.backend.StatusRequest;
-import de.united.aztube.backend.StatusResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
