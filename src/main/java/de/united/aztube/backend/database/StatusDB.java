@@ -1,10 +1,13 @@
 package de.united.aztube.backend.database;
 
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Table(name = "StatusDB")
@@ -13,12 +16,12 @@ public class StatusDB implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int id;
-
     private String code;
-
     private long timestamp;
-
     private String status;
+
+    private String deviceToken;
+    private String deviceName;
 
     public StatusDB() {
 
@@ -29,6 +32,23 @@ public class StatusDB implements Serializable {
         this.code = code;
         this.timestamp = timestamp;
         this.status = status;
+    }
+
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public int getId() {
