@@ -12,12 +12,6 @@ import java.util.UUID;
 @RestController
 public class YTDLController {
 
-    @GetMapping(path = "/generate")
-    public CodeGenerator getCode() {
-        CodeGenerator codeGenerator = new CodeGenerator();
-        return codeGenerator;
-    }
-
     @GetMapping(path = "/dosomething")
     public @ResponseBody
     String doSomething() {
@@ -32,12 +26,6 @@ public class YTDLController {
         return response;
     }
 
-    @PostMapping(path = "/status")
-    public void getResponse(@RequestBody StatusRequest request) {
-        StatusResponse response = new StatusResponse();
-        response.setCode(request.getCode());
-        System.out.println(response.getStatus());
-    }
 
 
 }
