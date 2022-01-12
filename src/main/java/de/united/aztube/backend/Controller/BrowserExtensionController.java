@@ -98,8 +98,7 @@ public class BrowserExtensionController {
     @GetMapping(path = "/checkTimeout")
     public void checkTimeout() {
         List<StatusDB> statusDB = repository.findAll().
-                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000))
-                        && x.getStatus().equals("generated"))
+                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
                 .collect(Collectors.toList());
 
         statusDB.forEach(x -> {repository.deleteById(x.getId());
