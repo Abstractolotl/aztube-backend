@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @EnableScheduling
-@RequestMapping(path = "api/v1/qr")
 public class BrowserExtensionController {
 
 
