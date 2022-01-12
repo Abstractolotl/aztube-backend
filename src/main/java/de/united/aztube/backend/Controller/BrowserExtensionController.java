@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @EnableScheduling
-@RequestMapping(path = "api/v1/qr")
+@RequestMapping(path = "/qr")
 public class BrowserExtensionController {
 
     private @Autowired StatusCodeRepository repository;
@@ -75,7 +75,7 @@ public class BrowserExtensionController {
             linkRepository.save(link);
 
             return new StatusResponse(statusDB.getStatus(), browserToken, statusDB.getDeviceName());
-        };
+        }
 
         StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "");
         return response;
@@ -91,6 +91,13 @@ public class BrowserExtensionController {
         download.setVideoID(request.getVideoID());
         downloadRepository.save(download);
         return new DownloadResponse(true, null);
+    }
+
+    @PostMapping(path = "/poll")
+    public @ResponseBody
+    PollResponse download(@RequestBody PollRequest request) {
+
+        return new PollResponse();
     }
 
     @Scheduled(fixedDelay = 1000)

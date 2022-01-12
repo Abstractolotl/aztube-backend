@@ -2,6 +2,7 @@ package de.united.aztube.backend.Model;
 
 
 public class StatusRequest {
+
     String code;
 
     public StatusRequest(String code) {
