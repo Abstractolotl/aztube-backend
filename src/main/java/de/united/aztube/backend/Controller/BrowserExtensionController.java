@@ -109,10 +109,11 @@ public class BrowserExtensionController {
     public @ResponseBody
     PollResponse download(@RequestBody PollRequest request) {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
-         downloadRepository.findAllByDeviceToken(request.getDeviceToken()).stream().
-               forEach(x -> {
-                    downloadRepository.delete(downloadRepository.findByDeviceToken(x.getDeviceToken()));
-               });
+        downloadRepository.findAll()
+                .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
+                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadID());
+                System.out.println(x.getDownloadID());});
+
         return new PollResponse(true , downloads , null);
     }
 
