@@ -9,4 +9,8 @@ public interface DownloadRepository extends CrudRepository<Download , Integer> {
 
     List<Download> findAllByDeviceToken(String deviceToken);
 
+    Download findByDeviceToken(String deviceToken);
+
+    void deleteAllByDeviceToken(String deviceToken);
+
 }

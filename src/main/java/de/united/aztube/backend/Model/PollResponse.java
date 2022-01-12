@@ -1,18 +1,22 @@
 package de.united.aztube.backend.Model;
 
+import de.united.aztube.backend.database.Download;
+
+import java.util.List;
+
 public class PollResponse {
 
     boolean success;
     private String error;
-    private DownloadRequest[] downloadRequests;
+    private List<Download> download;
 
     public PollResponse() {
     }
 
-    public PollResponse(boolean success, DownloadRequest[] downloadRequests, String error) {
+    public PollResponse(boolean success, List<Download> downloadRequests, String error) {
         this.success = success;
         this.error = error;
-        this.downloadRequests = downloadRequests;
+        this.download = download;
     }
 
     public boolean isSuccess() {
@@ -31,11 +35,11 @@ public class PollResponse {
         this.error = error;
     }
 
-    public DownloadRequest[] getDownloadRequests() {
-        return downloadRequests;
+    public List<Download> getDownload() {
+        return download;
     }
 
-    public void setDownloadRequests(DownloadRequest[] downloadRequests) {
-        this.downloadRequests = downloadRequests;
+    public void setDownload(List<Download> download) {
+        this.download = download;
     }
 }
