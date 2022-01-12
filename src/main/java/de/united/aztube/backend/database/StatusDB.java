@@ -1,13 +1,8 @@
 package de.united.aztube.backend.database;
 
-
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.UUID;
+
 
 @Entity
 @Table(name = "StatusDB")

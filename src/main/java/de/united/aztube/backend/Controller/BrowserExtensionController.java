@@ -6,18 +6,17 @@ import de.united.aztube.backend.Model.StatusRequest;
 import de.united.aztube.backend.Model.StatusResponse;
 import de.united.aztube.backend.Model.RegisterRequest;
 import de.united.aztube.backend.Model.RegisterResponse;
-import de.united.aztube.backend.Model.StatusRequest;
-import de.united.aztube.backend.Model.StatusResponse;
 import de.united.aztube.backend.database.Link;
 import de.united.aztube.backend.database.LinkRepository;
 import de.united.aztube.backend.database.StatusDB;
 import de.united.aztube.backend.database.StatusCodeRepository;
+import de.united.aztube.backend.Model.*;
+import de.united.aztube.backend.database.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,6 +31,7 @@ public class BrowserExtensionController {
 
     private @Autowired StatusCodeRepository repository;
     private @Autowired LinkRepository linkRepository;
+    private @Autowired DownloadRepository downloadRepository;
 
     @GetMapping(path = "/generate")
         public GenerateRespose getCode() {
@@ -39,7 +39,6 @@ public class BrowserExtensionController {
         StatusDB statusDB = new StatusDB();
         GenerateRespose generateRespose = new GenerateRespose(timeout);
         statusDB.setCode(generateRespose.getUuid());
-        Date date = new Date();
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus("generated");
         repository.save(statusDB);
@@ -92,6 +91,18 @@ public class BrowserExtensionController {
 
         StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "");
         return response;
+    }
+
+    @PostMapping(path = "/download")
+    public @ResponseBody
+    DownloadResponse download(@RequestBody DownloadRequest request) {
+        Download download = new Download();
+        download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
+        download.setFilename(request.getFilename());
+        download.setQuality(request.getQuality());
+        download.setVideoID(request.getVideoID());
+        downloadRepository.save(download);
+        return new DownloadResponse(true, null);
     }
 
     @Scheduled(fixedDelay = 1000)
