@@ -113,7 +113,6 @@ public class BrowserExtensionController {
                 .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
                 .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadID());
                 System.out.println(x.getDownloadID());});
-
         return new PollResponse(true , downloads , null);
     }
 
