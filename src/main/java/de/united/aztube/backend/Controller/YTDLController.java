@@ -16,11 +16,4 @@ public class YTDLController {
         return "Hello Frontend";
     }
 
-    @PostMapping(path = "/register")
-    public @ResponseBody
-    RegisterResponse register(@RequestBody RegisterRequest request) {
-        RegisterResponse response = new RegisterResponse(true, "", UUID.randomUUID());
-        return response;
-    }
-
 }

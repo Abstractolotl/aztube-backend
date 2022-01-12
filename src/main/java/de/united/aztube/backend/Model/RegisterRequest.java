@@ -5,13 +5,23 @@ import java.util.UUID;
 public class RegisterRequest {
 
     private UUID code;
+    private String deviceName;
 
-    public RegisterRequest(UUID code) {
+    public RegisterRequest(UUID code, String deviceName) {
         this.code = code;
+        this.deviceName = deviceName;
     }
 
     public RegisterRequest() {
 
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public UUID getCode() {
