@@ -73,22 +73,22 @@ public class BrowserExtensionController {
         StatusDB statusDB = repository.findByCode(request.getCode());
         if(statusDB == null){
             //TODO:
-            return new StatusResponse(null, null, null, "no entry in database");
+            return new StatusResponse(false, null, null, null, "no entry in database");
         }
 
         if(statusDB.getStatus().equals("registered")) {
             UUID browserToken = UUID.randomUUID();
             if(statusDB.getDeviceToken() == null || statusDB.getDeviceName() == null || statusDB.getDeviceName().trim().equals("")) {
                 //TODO: Integrity error
-                return new StatusResponse(null, null, null, "Integrity error");
+                return new StatusResponse(false , null, null, null, "Integrity error");
             }
             Link link = new Link(browserToken.toString(), statusDB.getDeviceToken(), statusDB.getDeviceName(), System.currentTimeMillis());
             linkRepository.save(link);
 
-            return new StatusResponse(statusDB.getStatus(), browserToken, statusDB.getDeviceName(), null);
+            return new StatusResponse(true, statusDB.getStatus(), browserToken, statusDB.getDeviceName(), null);
         }
 
-        StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "", null);
+        StatusResponse response = new StatusResponse(true, statusDB.getStatus(), null, "", null);
         return response;
     }
 
