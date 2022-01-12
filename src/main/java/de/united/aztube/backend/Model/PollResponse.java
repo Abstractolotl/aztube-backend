@@ -35,11 +35,11 @@ public class PollResponse {
         this.error = error;
     }
 
-    public List<Download> getDownload() {
+    public List<Download> getDownloads() {
         return downloads;
     }
 
-    public void setDownload(List<Download> downloads) {
+    public void setDownloads(List<Download> downloads) {
         this.downloads = downloads;
     }
 }
