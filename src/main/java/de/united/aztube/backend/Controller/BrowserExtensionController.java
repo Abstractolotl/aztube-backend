@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @EnableScheduling
 public class BrowserExtensionController {
 
-
     int timeout = 30;
 
     private @Autowired StatusCodeRepository repository;
@@ -86,7 +85,7 @@ public class BrowserExtensionController {
             Link link = new Link(browserToken.toString(), statusDB.getDeviceToken(), statusDB.getDeviceName(), System.currentTimeMillis());
             linkRepository.save(link);
 
-            return new StatusResponse(true, statusDB.getStatus(), browserToken, statusDB.getDeviceName(), null);
+            return new StatusResponse(true, statusDB.getStatus(), browserToken.toString(), statusDB.getDeviceName(), null);
         }
 
         StatusResponse response = new StatusResponse(true, statusDB.getStatus(), null, "", null);
@@ -108,8 +107,9 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/poll")
     public @ResponseBody
-    PollResponse download(@RequestBody PollRequest request) {
-        return null;
+    List<Download> download(@RequestBody PollRequest request) {
+        List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
+        return downloads;
     }
 
     @Scheduled(fixedDelay = 1000)

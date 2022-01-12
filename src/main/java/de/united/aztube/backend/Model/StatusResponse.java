@@ -8,10 +8,10 @@ public class StatusResponse {
     private String error;
 
     private String status;
-    private UUID browserToken;
+    private String browserToken;
     private String deviceName;
 
-    public StatusResponse(boolean success, String status, UUID browserToken, String deviceName, String error) {
+    public StatusResponse(boolean success, String status, String browserToken, String deviceName, String error) {
         this.status = status;
         this.browserToken = browserToken;
         this.deviceName = deviceName;
@@ -39,11 +39,11 @@ public class StatusResponse {
         this.status = status;
     }
 
-    public UUID getBrowserToken() {
+    public String getBrowserToken() {
         return browserToken;
     }
 
-    public void setBrowserToken(UUID browserToken) {
+    public void setBrowserToken(String browserToken) {
         this.browserToken = browserToken;
     }
 

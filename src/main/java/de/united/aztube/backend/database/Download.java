@@ -16,6 +16,7 @@ public class Download {
     private String author;
 
     public Download() {
+
     }
 
     public Download(int id, String deviceToken, String videoID, String quality, String title) {

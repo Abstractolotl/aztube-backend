@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface DownloadRepository extends CrudRepository<Download , Integer> {
 
-    List<DownloadRequest> findByDeviceToken(String deviceToken);
+    List<Download> findAllByDeviceToken(String deviceToken);
 
-    @Override
-    List<Download> findAll();
 }
