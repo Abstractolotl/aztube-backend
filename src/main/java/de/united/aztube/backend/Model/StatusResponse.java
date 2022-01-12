@@ -4,6 +4,9 @@ import java.util.UUID;
 
 public class StatusResponse {
 
+    private boolean success;
+    private String error;
+
     private String status;
     private UUID browserToken;
     private String deviceName;
@@ -12,6 +15,23 @@ public class StatusResponse {
         this.status = status;
         this.browserToken = browserToken;
         this.deviceName = deviceName;
+        this.success = true;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public void setStatus(String status) {
