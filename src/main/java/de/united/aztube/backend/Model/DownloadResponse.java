@@ -1,6 +1,7 @@
 package de.united.aztube.backend.Model;
 
 public class DownloadResponse {
+
     boolean success;
     private String error;
 

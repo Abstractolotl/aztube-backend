@@ -107,8 +107,13 @@ public class BrowserExtensionController {
             return new DownloadResponse(false, "bad quality");
         }
 
+        Link link = linkRepository.findByBrowserToken(request.getBrowserToken());
+        if(link == null){
+            return new DownloadResponse(false, "browserToken not Found");
+        }
+
         Download download = new Download();
-        download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
+        download.setDeviceToken(link.getDeviceToken());
         download.setTitle(request.getTitle());
         download.setQuality(request.getQuality());
         download.setVideoId(request.getVideoId());
