@@ -26,7 +26,7 @@ public class BrowserExtensionController {
 
     int timeout = 30;
 
-    private @Autowired StatusCodeRepository repository;
+    private @Autowired StatusCodeRepository statusCodeRepository;
     private @Autowired LinkRepository linkRepository;
     private @Autowired DownloadRepository downloadRepository;
 
@@ -38,14 +38,14 @@ public class BrowserExtensionController {
         statusDB.setCode(generateRespose.getUuid());
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus("generated");
-        repository.save(statusDB);
+        statusCodeRepository.save(statusDB);
         return generateRespose;
     }
 
     @PostMapping(path = "/register")
     public @ResponseBody
     RegisterResponse register(@RequestBody RegisterRequest request) {
-        StatusDB entry = repository.findByCode(request.getCode().toString());
+        StatusDB entry = statusCodeRepository.findByCode(request.getCode().toString());
         if(entry == null) {
             return new RegisterResponse(false, "no such entry", null);
         }
@@ -58,7 +58,7 @@ public class BrowserExtensionController {
         entry.setDeviceToken(deviceToken.toString());
         entry.setDeviceName(request.getDeviceName());
         entry.setStatus("registered");
-        repository.save(entry);
+        statusCodeRepository.save(entry);
 
         RegisterResponse response = new RegisterResponse(true, "", deviceToken);
         return response;
@@ -73,11 +73,12 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/status")
     public @ResponseBody StatusResponse status(@RequestBody StatusRequest request) {
-        repository.findAll().stream()
+        statusCodeRepository.findAll().stream()
                 .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
-                .collect(Collectors.toList()).forEach(x -> {repository.deleteById(x.getId());
+                .collect(Collectors.toList()).forEach(x -> {
+                    statusCodeRepository.deleteById(x.getId());
                     System.out.println("entry number: " + x.getId() + " timed out");});
-        StatusDB statusDB = repository.findByCode(request.getCode());
+        StatusDB statusDB = statusCodeRepository.findByCode(request.getCode());
         if(statusDB == null){
             return new StatusResponse(false, null, null, null, "no entry in database");
         }
@@ -127,8 +128,8 @@ public class BrowserExtensionController {
     PollResponse poll(@PathVariable UUID deviceToken) {
         Link link = linkRepository.findByDeviceToken(deviceToken.toString());
         if(link == null) {
-            StatusDB db = repository.findByDeviceToken(deviceToken.toString());
-            if(db != null) new PollResponse(false, null, "deviceToken not ready yet")
+            StatusDB db = statusCodeRepository.findByDeviceToken(deviceToken.toString());
+            if(db != null) new PollResponse(false, null, "deviceToken not ready yet");
             return new PollResponse(false, null, "deviceToken does not exist");
         }
 
