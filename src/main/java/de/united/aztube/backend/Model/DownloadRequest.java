@@ -17,6 +17,7 @@ public class DownloadRequest {
         this.quality = quality;
         this.title = title;
         this.author = author;
+
     }
 
     public String getBrowserToken() {
@@ -48,6 +49,7 @@ public class DownloadRequest {
     }
 
     public void setTitle(String title) {
+
         this.title = title;
     }
 
