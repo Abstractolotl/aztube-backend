@@ -112,7 +112,7 @@ public class BrowserExtensionController {
         return new DownloadResponse(true, null);
     }
 
-    @PostMapping(path = "/poll/{deviceToken}")
+    @GetMapping(path = "/poll/{deviceToken}")
     public @ResponseBody
     PollResponse poll(@PathVariable UUID deviceToken) {
 
