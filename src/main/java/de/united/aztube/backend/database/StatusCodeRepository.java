@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface StatusCodeRepository extends CrudRepository<StatusDB, Integer> {
 
-    public StatusDB findByCode(String code);
+    StatusDB findByCode(String code);
+    StatusDB findByDeviceToken(String deviceToken);
 
     @Override
     List<StatusDB> findAll();
