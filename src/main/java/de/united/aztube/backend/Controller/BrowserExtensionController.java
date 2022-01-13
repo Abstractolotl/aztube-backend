@@ -102,6 +102,7 @@ public class BrowserExtensionController {
     @PostMapping(path = "/download")
     public @ResponseBody
     DownloadResponse download(@RequestBody DownloadRequest request) {
+
         Download download = new Download();
         download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
         download.setTitle(request.getTitle());
@@ -115,6 +116,10 @@ public class BrowserExtensionController {
     @GetMapping(path = "/poll/{deviceToken}")
     public @ResponseBody
     PollResponse poll(@PathVariable UUID deviceToken) {
+        Link link = linkRepository.findByDeviceToken(deviceToken.toString());
+        if(link == null) {
+            return new PollResponse(false, null, "deviceToken does not exist");
+        }
 
         List<Download> downloads = downloadRepository.findAllByDeviceToken(deviceToken.toString());
         downloadRepository.findAll()
