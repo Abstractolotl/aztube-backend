@@ -68,6 +68,13 @@ public class BrowserExtensionController {
         return response;
     }
 
+    @PostMapping(path = "/unregister")
+    public @ResponseBody
+    DownloadResponse unregister(@RequestBody PollRequest pollRequest) {
+        linkRepository.deleteByDeviceToken(pollRequest.getDeviceToken());
+        return new DownloadResponse(true, null);
+    }
+
     @PostMapping(path = "/status")
     public @ResponseBody StatusResponse status(@RequestBody StatusRequest request) {
         StatusDB statusDB = repository.findByCode(request.getCode());
@@ -113,17 +120,16 @@ public class BrowserExtensionController {
                 .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
                 .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadID());
                 System.out.println("Download request number: " + x.getDownloadID() + "was deleted");});
+        if (downloads.isEmpty()) return new PollResponse(false , downloads , "no entry in database");
         return new PollResponse(true , downloads , null);
     }
 
     @Scheduled(fixedDelay = 1000)
     @GetMapping(path = "/checkTimeout")
     public void checkTimeout() {
-        List<StatusDB> statusDB = repository.findAll().
-                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
-                .collect(Collectors.toList());
-
-        statusDB.forEach(x -> {repository.deleteById(x.getId());
+        repository.findAll().stream()
+                .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
+                .collect(Collectors.toList()).forEach(x -> {repository.deleteById(x.getId());
             System.out.println("entry number: " + x.getId() + " timed out");});
     }
 
