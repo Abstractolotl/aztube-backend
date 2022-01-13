@@ -114,20 +114,25 @@ public class BrowserExtensionController {
         download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
         download.setTitle(request.getTitle());
         download.setQuality(request.getQuality());
-        download.setVideoID(request.getVideoID());
+        download.setVideoId(request.getVideoId());
         download.setAuthor(request.getAuthor());
         downloadRepository.save(download);
         return new DownloadResponse(true, null);
     }
 
-    @PostMapping(path = "/poll")
+    @GetMapping(path = "/poll/{deviceToken}")
     public @ResponseBody
-    PollResponse poll(@RequestBody PollRequest request) {
-        List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
+    PollResponse poll(@PathVariable UUID deviceToken) {
+        Link link = linkRepository.findByDeviceToken(deviceToken.toString());
+        if(link == null) {
+            return new PollResponse(false, null, "deviceToken does not exist");
+        }
+
+        List<Download> downloads = downloadRepository.findAllByDeviceToken(deviceToken.toString());
         downloadRepository.findAll()
-                .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
-                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadID());
-                System.out.println("Download request number: " + x.getDownloadID() + "was deleted");});
+                .stream().filter(x -> (x.getDeviceToken().equals(deviceToken.toString())))
+                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadId());
+                System.out.println("Download request number: " + x.getDownloadId() + "was deleted");});
         if (downloads.isEmpty()) return new PollResponse(false , downloads , "no entry in database");
         return new PollResponse(true , downloads , null);
     }
