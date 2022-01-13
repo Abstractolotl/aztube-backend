@@ -33,7 +33,7 @@ public class BrowserExtensionController {
     private @Autowired DownloadRepository downloadRepository;
 
     @GetMapping(path = "/generate")
-        public GenerateRespose getCode() {
+        public GenerateRespose generate() {
 
         StatusDB statusDB = new StatusDB();
         GenerateRespose generateRespose = new GenerateRespose(timeout);
@@ -107,7 +107,7 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/poll")
     public @ResponseBody
-    PollResponse downloads(@RequestBody PollRequest request) {
+    PollResponse poll(@RequestBody PollRequest request) {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
         downloadRepository.findAll()
                 .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
@@ -126,6 +126,5 @@ public class BrowserExtensionController {
         statusDB.forEach(x -> {repository.deleteById(x.getId());
             System.out.println("entry number: " + x.getId() + " timed out");});
     }
-
 
 }
