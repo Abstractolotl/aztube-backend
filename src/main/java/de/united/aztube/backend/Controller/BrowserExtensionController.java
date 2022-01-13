@@ -67,7 +67,18 @@ public class BrowserExtensionController {
     @PostMapping(path = "/unregister")
     public @ResponseBody
     DownloadResponse unregister(@RequestBody PollRequest pollRequest) {
-        linkRepository.deleteById(linkRepository.findByDeviceToken(pollRequest.getDeviceToken()).getId());
+        Link link = linkRepository.findByDeviceToken(pollRequest.getDeviceToken());
+
+        if(link == null){
+            link = linkRepository.findByBrowserToken(pollRequest.getDeviceToken());
+            if(link == null){
+                return new DownloadResponse(false, "token not found");
+            } else {
+                linkRepository.deleteById(linkRepository.findByBrowserToken(pollRequest.getDeviceToken()).getId());
+            }
+        } else {
+            linkRepository.deleteById(linkRepository.findByDeviceToken(pollRequest.getDeviceToken()).getId());
+        }
         return new DownloadResponse(true, null);
     }
 
