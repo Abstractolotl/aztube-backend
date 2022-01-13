@@ -5,17 +5,17 @@ public class DownloadRequest {
     private String browserToken;
     private String videoID;
     private String quality;
-    private String filename;
+    private String title;
     private String author;
 
     public DownloadRequest() {
     }
 
-    public DownloadRequest(String browserToken, String videoID, String quality, String filename) {
+    public DownloadRequest(String browserToken, String videoID, String quality, String title) {
         this.browserToken = browserToken;
         this.videoID = videoID;
         this.quality = quality;
-        this.filename = filename;
+        this.title = title;
     }
 
     public String getBrowserToken() {
@@ -42,12 +42,12 @@ public class DownloadRequest {
         this.quality = quality;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getTitle() {
+        return title;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setTitle(String filename) {
+        this.title = title;
     }
 
     public String getAuthor() {
