@@ -1,16 +1,19 @@
-package de.united.aztube.backend;
+package de.united.aztube.backend.Model;
 
 import java.util.UUID;
 
-public class CodeGenerator {
+public class GenerateRespose {
     boolean success = true;
     String uuid;
     int timeout = 30;
 
 
-    public CodeGenerator() {
-        this.uuid = UUID.randomUUID().toString();
+    public GenerateRespose() {
+    }
+
+    public GenerateRespose(int timeout) {
         this.timeout = timeout;
+        this.uuid = UUID.randomUUID().toString();
     }
 
     public String getUuid() {

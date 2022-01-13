@@ -1,6 +1,15 @@
 package de.united.aztube.backend.Controller;
 
-import de.united.aztube.backend.CodeGenerator;
+
+import de.united.aztube.backend.Model.GenerateRespose;
+import de.united.aztube.backend.Model.StatusRequest;
+import de.united.aztube.backend.Model.StatusResponse;
+import de.united.aztube.backend.Model.RegisterRequest;
+import de.united.aztube.backend.Model.RegisterResponse;
+import de.united.aztube.backend.database.Link;
+import de.united.aztube.backend.database.LinkRepository;
+import de.united.aztube.backend.database.StatusDB;
+import de.united.aztube.backend.database.StatusCodeRepository;
 import de.united.aztube.backend.Model.*;
 import de.united.aztube.backend.database.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,29 +17,31 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
 @EnableScheduling
-@RequestMapping(path = "/qr")
 public class BrowserExtensionController {
+
+    int timeout = 30;
 
     private @Autowired StatusCodeRepository repository;
     private @Autowired LinkRepository linkRepository;
     private @Autowired DownloadRepository downloadRepository;
 
     @GetMapping(path = "/generate")
-    public CodeGenerator generate() {
+        public GenerateRespose generate() {
+
         StatusDB statusDB = new StatusDB();
-        CodeGenerator codeGenerator = new CodeGenerator();
-        statusDB.setCode(codeGenerator.getUuid());
+        GenerateRespose generateRespose = new GenerateRespose(timeout);
+        statusDB.setCode(generateRespose.getUuid());
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus("generated");
         repository.save(statusDB);
-        return codeGenerator;
+        return generateRespose;
     }
 
     @PostMapping(path = "/register")
@@ -62,22 +73,22 @@ public class BrowserExtensionController {
         StatusDB statusDB = repository.findByCode(request.getCode());
         if(statusDB == null){
             //TODO:
-            return new StatusResponse(null, null, null, "no entry in database");
+            return new StatusResponse(false, null, null, null, "no entry in database");
         }
 
         if(statusDB.getStatus().equals("registered")) {
             UUID browserToken = UUID.randomUUID();
             if(statusDB.getDeviceToken() == null || statusDB.getDeviceName() == null || statusDB.getDeviceName().trim().equals("")) {
                 //TODO: Integrity error
-                return new StatusResponse(null, null, null, "Integrity error");
+                return new StatusResponse(false , null, null, null, "Integrity error");
             }
             Link link = new Link(browserToken.toString(), statusDB.getDeviceToken(), statusDB.getDeviceName(), System.currentTimeMillis());
             linkRepository.save(link);
 
-            return new StatusResponse(statusDB.getStatus(), browserToken, statusDB.getDeviceName(), null);
+            return new StatusResponse(true, statusDB.getStatus(), browserToken.toString(), statusDB.getDeviceName(), null);
         }
 
-        StatusResponse response = new StatusResponse(statusDB.getStatus(), null, "", null);
+        StatusResponse response = new StatusResponse(true, statusDB.getStatus(), null, "", null);
         return response;
     }
 
@@ -96,21 +107,24 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/poll")
     public @ResponseBody
-    PollResponse download(@RequestBody PollRequest request) {
-        return null;
+    PollResponse poll(@RequestBody PollRequest request) {
+        List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
+        downloadRepository.findAll()
+                .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))
+                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadID());
+                System.out.println("Download request number: " + x.getDownloadID() + "was deleted");});
+        return new PollResponse(true , downloads , null);
     }
 
     @Scheduled(fixedDelay = 1000)
     @GetMapping(path = "/checkTimeout")
     public void checkTimeout() {
         List<StatusDB> statusDB = repository.findAll().
-                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > 30000)
-                        && x.getStatus().equals("generated"))
+                stream().filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
                 .collect(Collectors.toList());
 
         statusDB.forEach(x -> {repository.deleteById(x.getId());
             System.out.println("entry number: " + x.getId() + " timed out");});
     }
-
 
 }
