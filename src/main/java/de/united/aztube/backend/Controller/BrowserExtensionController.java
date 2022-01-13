@@ -67,7 +67,7 @@ public class BrowserExtensionController {
     @PostMapping(path = "/unregister")
     public @ResponseBody
     DownloadResponse unregister(@RequestBody PollRequest pollRequest) {
-        linkRepository.deleteByDeviceToken(pollRequest.getDeviceToken());
+        linkRepository.deleteById(linkRepository.findByDeviceToken(pollRequest.getDeviceToken()).getId());
         return new DownloadResponse(true, null);
     }
 
