@@ -106,6 +106,9 @@ public class BrowserExtensionController {
                 ||request.getQuality().equals("1080p"))) {
             return new DownloadResponse(false, "bad quality");
         }
+        if (linkRepository.findByBrowserToken(request.getBrowserToken()).equals(null)) {
+            return new DownloadResponse(false, "bad browser token");
+        }
 
         Download download = new Download();
         download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
