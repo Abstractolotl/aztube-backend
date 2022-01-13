@@ -118,10 +118,13 @@ public class BrowserExtensionController {
                 ||request.getQuality().equals("360p")
                 ||request.getQuality().equals("480p")
                 ||request.getQuality().equals("720p")
+                ||request.getQuality().equals("720p60")
                 ||request.getQuality().equals("1080p")
+                ||request.getQuality().equals("1080p60")
                 ||request.getQuality().equals("1440p")
+                ||request.getQuality().equals("1440p60")
                 ||request.getQuality().equals("2160p")
-                ||request.getQuality().equals("4320p"))) {
+                ||request.getQuality().equals("2160p60"))) {
             return new DownloadResponse(false, "bad quality");
         }
 
