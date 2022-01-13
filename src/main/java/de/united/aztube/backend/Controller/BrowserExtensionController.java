@@ -138,6 +138,8 @@ public class BrowserExtensionController {
     PollResponse poll(@PathVariable UUID deviceToken) {
         Link link = linkRepository.findByDeviceToken(deviceToken.toString());
         if(link == null) {
+            StatusDB db = repository.findByDeviceToken(deviceToken.toString());
+            if(db != null) new PollResponse(false, null, "deviceToken not ready yet")
             return new PollResponse(false, null, "deviceToken does not exist");
         }
 
