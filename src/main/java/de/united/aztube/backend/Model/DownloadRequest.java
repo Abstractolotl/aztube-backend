@@ -3,19 +3,20 @@ package de.united.aztube.backend.Model;
 public class DownloadRequest {
 
     private String browserToken;
-    private String videoID;
+    private String videoId;
     private String quality;
-    private String filename;
+    private String title;
     private String author;
 
     public DownloadRequest() {
     }
 
-    public DownloadRequest(String browserToken, String videoID, String quality, String filename) {
+    public DownloadRequest(String browserToken, String videoId, String quality, String title, String author) {
         this.browserToken = browserToken;
-        this.videoID = videoID;
+        this.videoId = videoId;
         this.quality = quality;
-        this.filename = filename;
+        this.title = title;
+        this.author = author;
     }
 
     public String getBrowserToken() {
@@ -26,12 +27,12 @@ public class DownloadRequest {
         this.browserToken = browserToken;
     }
 
-    public String getVideoID() {
-        return videoID;
+    public String getVideoId() {
+        return videoId;
     }
 
-    public void setVideoID(String videoID) {
-        this.videoID = videoID;
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
     }
 
     public String getQuality() {
@@ -42,12 +43,12 @@ public class DownloadRequest {
         this.quality = quality;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getTitle() {
+        return title;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -57,4 +58,5 @@ public class DownloadRequest {
     public void setAuthor(String author) {
         this.author = author;
     }
+
 }

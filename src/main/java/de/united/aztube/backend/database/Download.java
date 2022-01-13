@@ -8,9 +8,9 @@ public class Download {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int downloadID;
+    private int downloadId;
     private String deviceToken;
-    private String videoID;
+    private String videoId;
     private String quality;
     private String title;
     private String author;
@@ -19,20 +19,21 @@ public class Download {
 
     }
 
-    public Download(int downloadID, String deviceToken, String videoID, String quality, String title) {
-        this.downloadID = downloadID;
+    public Download(int downloadId, String deviceToken, String videoId, String quality, String title, String author) {
+        this.downloadId = downloadId;
         this.deviceToken = deviceToken;
-        this.videoID = videoID;
+        this.videoId = videoId;
         this.quality = quality;
         this.title = title;
+        this.author = author;
     }
 
-    public int getDownloadID() {
-        return downloadID;
+    public int getDownloadId() {
+        return downloadId;
     }
 
-    public void setDownloadID(int id) {
-        this.downloadID = id;
+    public void setDownloadId(int downloadId) {
+        this.downloadId = downloadId;
     }
 
     public String getDeviceToken() {
@@ -43,12 +44,12 @@ public class Download {
         this.deviceToken = deviceToken;
     }
 
-    public String getVideoID() {
-        return videoID;
+    public String getVideoId() {
+        return videoId;
     }
 
-    public void setVideoID(String videoID) {
-        this.videoID = videoID;
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
     }
 
     public String getQuality() {
