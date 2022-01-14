@@ -1,4 +1,4 @@
-package de.united.aztube.backend.database;
+package de.united.aztube.backend.Database;
 
 import org.springframework.data.repository.CrudRepository;
 

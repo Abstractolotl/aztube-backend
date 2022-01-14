@@ -6,19 +6,19 @@ import de.united.aztube.backend.Model.StatusRequest;
 import de.united.aztube.backend.Model.StatusResponse;
 import de.united.aztube.backend.Model.RegisterRequest;
 import de.united.aztube.backend.Model.RegisterResponse;
-import de.united.aztube.backend.database.Link;
-import de.united.aztube.backend.database.LinkRepository;
-import de.united.aztube.backend.database.StatusDB;
-import de.united.aztube.backend.database.StatusCodeRepository;
+import de.united.aztube.backend.Database.Link;
+import de.united.aztube.backend.Database.LinkRepository;
+import de.united.aztube.backend.Database.StatusDB;
+import de.united.aztube.backend.Database.StatusCodeRepository;
 import de.united.aztube.backend.Model.*;
-import de.united.aztube.backend.database.*;
+import de.united.aztube.backend.Database.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @EnableScheduling
@@ -40,6 +40,20 @@ public class BrowserExtensionController {
         statusDB.setStatus("generated");
         statusCodeRepository.save(statusDB);
         return generateRespose;
+    }
+
+    @PostMapping(path = "/browserTokenStatus")
+    public BrowserTokenResponse browserTokenStatus(@RequestBody BrowserTokenRequest request){
+        BrowserTokenResponse response = new BrowserTokenResponse();
+        response.setTokens(new ArrayList<>());
+        Iterable<Link> links = linkRepository.findAll();
+        request.getTokens().forEach(token -> {
+            boolean exists = StreamSupport
+                    .stream(links.spliterator(), false)
+                    .anyMatch(link -> link.getBrowserToken().equals(token.toString()));
+            response.getTokens().add(new BrowserTokenStatus(token, exists));
+        });
+        return response;
     }
 
     @PostMapping(path = "/register")
