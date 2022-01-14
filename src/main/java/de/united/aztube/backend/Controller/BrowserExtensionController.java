@@ -127,9 +127,18 @@ public class BrowserExtensionController {
     public @ResponseBody
     DownloadResponse download(@RequestBody DownloadRequest request) {
         if (!(request.getQuality().equals("audio")
+                ||request.getQuality().equals("144p")
+                ||request.getQuality().equals("240p")
+                ||request.getQuality().equals("360p")
                 ||request.getQuality().equals("480p")
                 ||request.getQuality().equals("720p")
-                ||request.getQuality().equals("1080p"))) {
+                ||request.getQuality().equals("720p60")
+                ||request.getQuality().equals("1080p")
+                ||request.getQuality().equals("1080p60")
+                ||request.getQuality().equals("1440p")
+                ||request.getQuality().equals("1440p60")
+                ||request.getQuality().equals("2160p")
+                ||request.getQuality().equals("2160p60"))) {
             return new DownloadResponse(false, "bad quality");
         }
 
