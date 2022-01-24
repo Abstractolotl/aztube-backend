@@ -1,9 +1,11 @@
 package de.united.aztube.backend.Model;
 
 
+import javax.validation.constraints.NotNull;
+
 public class StatusRequest {
 
-    String code;
+    @NotNull private String code;
 
     public StatusRequest(String code) {
         this.code = code;

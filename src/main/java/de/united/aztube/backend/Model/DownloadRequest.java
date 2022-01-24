@@ -1,10 +1,12 @@
 package de.united.aztube.backend.Model;
 
+import javax.validation.constraints.NotNull;
+
 public class DownloadRequest {
 
-    private String browserToken;
-    private String videoID;
-    private String quality;
+    @NotNull private String browserToken;
+    @NotNull private String videoID;
+    @NotNull private String quality;
     private String filename;
     private String author;
 

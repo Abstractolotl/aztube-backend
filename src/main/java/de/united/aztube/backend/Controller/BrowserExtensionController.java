@@ -15,8 +15,10 @@ import de.united.aztube.backend.database.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class BrowserExtensionController {
     private @Autowired DownloadRepository downloadRepository;
 
     @GetMapping(path = "/generate")
-        public GenerateRespose generate() {
+    public GenerateRespose generate() {
 
         StatusDB statusDB = new StatusDB();
         GenerateRespose generateRespose = new GenerateRespose(timeout);
@@ -45,8 +47,7 @@ public class BrowserExtensionController {
     }
 
     @PostMapping(path = "/register")
-    public @ResponseBody
-    RegisterResponse register(@RequestBody RegisterRequest request) {
+    public @ResponseBody RegisterResponse register(@RequestBody @Valid RegisterRequest request) {
         StatusDB entry = repository.findByCode(request.getCode().toString());
         if(entry == null) {
             //TODO:
@@ -69,7 +70,7 @@ public class BrowserExtensionController {
     }
 
     @PostMapping(path = "/status")
-    public @ResponseBody StatusResponse status(@RequestBody StatusRequest request) {
+    public @ResponseBody StatusResponse status(@RequestBody @Valid StatusRequest request) {
         StatusDB statusDB = repository.findByCode(request.getCode());
         if(statusDB == null){
             //TODO:
@@ -94,7 +95,7 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/download")
     public @ResponseBody
-    DownloadResponse download(@RequestBody DownloadRequest request) {
+    DownloadResponse download(@RequestBody @Valid DownloadRequest request) {
         Download download = new Download();
         download.setDeviceToken(linkRepository.findByBrowserToken(request.getBrowserToken()).getDeviceToken());
         download.setTitle(request.getFilename());
@@ -107,7 +108,7 @@ public class BrowserExtensionController {
 
     @PostMapping(path = "/poll")
     public @ResponseBody
-    PollResponse poll(@RequestBody PollRequest request) {
+    PollResponse poll(@RequestBody @Valid PollRequest request) {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(request.getDeviceToken());
         downloadRepository.findAll()
                 .stream().filter(x -> (x.getDeviceToken().equals(request.getDeviceToken())))

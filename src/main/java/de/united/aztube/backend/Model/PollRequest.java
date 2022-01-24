@@ -1,9 +1,12 @@
 package de.united.aztube.backend.Model;
 
 
+import javax.validation.constraints.NotNull;
+
 public class PollRequest {
 
-    String deviceToken;
+    @NotNull
+    private String deviceToken;
 
     public PollRequest(String code) {
         this.deviceToken = deviceToken;
@@ -18,4 +21,5 @@ public class PollRequest {
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
+
 }

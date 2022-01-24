@@ -1,11 +1,12 @@
 package de.united.aztube.backend.Model;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class RegisterRequest {
 
-    private UUID code;
-    private String deviceName;
+    @NotNull private UUID code;
+    @NotNull private String deviceName;
 
     public RegisterRequest(UUID code, String deviceName) {
         this.code = code;
