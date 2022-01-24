@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
@@ -74,8 +73,7 @@ public class BrowserExtensionController {
         entry.setStatus("registered");
         statusCodeRepository.save(entry);
 
-        RegisterResponse response = new RegisterResponse(true, "", deviceToken);
-        return response;
+        return new RegisterResponse(true, "", deviceToken);
     }
 
     @PostMapping(path = "/unregister")
@@ -99,9 +97,11 @@ public class BrowserExtensionController {
     public @ResponseBody StatusResponse status(@RequestBody @Valid StatusRequest request) {
         statusCodeRepository.findAll().stream()
                 .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (GENERATE_TIMEOUT * 1000)))
-                .collect(Collectors.toList()).forEach(x -> {
+                .forEach(x -> {
                     statusCodeRepository.deleteById(x.getId());
-                    System.out.println("entry number: " + x.getId() + " timed out");});
+                    System.out.println("entry number: " + x.getId() + " timed out");}
+                );
+
         StatusDB statusDB = statusCodeRepository.findByCode(request.getCode());
         if(statusDB == null){
             return new StatusResponse(false, null, null, null, "no entry in database");
@@ -118,8 +118,7 @@ public class BrowserExtensionController {
             return new StatusResponse(true, statusDB.getStatus(), browserToken.toString(), statusDB.getDeviceName(), null);
         }
 
-        StatusResponse response = new StatusResponse(true, statusDB.getStatus(), null, null, null);
-        return response;
+        return new StatusResponse(true, statusDB.getStatus(), null, null, null);
     }
 
     @PostMapping(path = "/download")
@@ -136,6 +135,7 @@ public class BrowserExtensionController {
         download.setVideoId(request.getVideoId());
         download.setAuthor(request.getAuthor());
         downloadRepository.save(download);
+
         return new DownloadResponse(true, null);
     }
 
@@ -156,6 +156,5 @@ public class BrowserExtensionController {
         if (downloads.isEmpty()) return new PollResponse(false , downloads , "no entry in database");
         return new PollResponse(true , downloads , null);
     }
-
 
 }
