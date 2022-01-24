@@ -6,14 +6,14 @@ public class DownloadRequest {
 
     @NotNull private String browserToken;
     @NotNull private String videoId;
-    @NotNull private String quality;
+    @NotNull private VideoQuality quality;
     private String title;
     private String author;
 
     public DownloadRequest() {
     }
 
-    public DownloadRequest(String browserToken, String videoId, String quality, String title, String author) {
+    public DownloadRequest(String browserToken, String videoId, VideoQuality quality, String title, String author) {
         this.browserToken = browserToken;
         this.videoId = videoId;
         this.quality = quality;
@@ -38,11 +38,11 @@ public class DownloadRequest {
         this.videoId = videoId;
     }
 
-    public String getQuality() {
+    public VideoQuality getQuality() {
         return quality;
     }
 
-    public void setQuality(String quality) {
+    public void setQuality(VideoQuality quality) {
         this.quality = quality;
     }
 

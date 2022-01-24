@@ -24,7 +24,7 @@ import java.util.stream.StreamSupport;
 @EnableScheduling
 public class BrowserExtensionController {
 
-    int timeout = 30;
+    private final int GENERATE_TIMEOUT = 30;
 
     private @Autowired StatusCodeRepository statusCodeRepository;
     private @Autowired LinkRepository linkRepository;
@@ -32,13 +32,14 @@ public class BrowserExtensionController {
 
     @GetMapping(path = "/generate")
     public GenerateRespose generate() {
+        GenerateRespose generateRespose = new GenerateRespose(GENERATE_TIMEOUT);
 
         StatusDB statusDB = new StatusDB();
-        GenerateRespose generateRespose = new GenerateRespose(timeout);
         statusDB.setCode(generateRespose.getUuid());
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus("generated");
         statusCodeRepository.save(statusDB);
+
         return generateRespose;
     }
 
@@ -57,8 +58,7 @@ public class BrowserExtensionController {
     }
 
     @PostMapping(path = "/register")
-    public @ResponseBody
-    RegisterResponse register(@RequestBody @Valid RegisterRequest request) {
+    public @ResponseBody RegisterResponse register(@RequestBody @Valid RegisterRequest request) {
         StatusDB entry = statusCodeRepository.findByCode(request.getCode().toString());
         if(entry == null) {
             return new RegisterResponse(false, "no such entry", null);
@@ -79,8 +79,7 @@ public class BrowserExtensionController {
     }
 
     @PostMapping(path = "/unregister")
-    public @ResponseBody
-    DownloadResponse unregister(@RequestBody PollRequest pollRequest) {
+    public @ResponseBody DownloadResponse unregister(@RequestBody PollRequest pollRequest) {
         Link link = linkRepository.findByDeviceToken(pollRequest.getDeviceToken());
 
         if(link == null){
@@ -99,7 +98,7 @@ public class BrowserExtensionController {
     @PostMapping(path = "/status")
     public @ResponseBody StatusResponse status(@RequestBody @Valid StatusRequest request) {
         statusCodeRepository.findAll().stream()
-                .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
+                .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (GENERATE_TIMEOUT * 1000)))
                 .collect(Collectors.toList()).forEach(x -> {
                     statusCodeRepository.deleteById(x.getId());
                     System.out.println("entry number: " + x.getId() + " timed out");});
@@ -126,22 +125,6 @@ public class BrowserExtensionController {
     @PostMapping(path = "/download")
     public @ResponseBody
     DownloadResponse download(@RequestBody @Valid DownloadRequest request) {
-        if (!(request.getQuality().equals("audio")
-                ||request.getQuality().equals("144p")
-                ||request.getQuality().equals("240p")
-                ||request.getQuality().equals("360p")
-                ||request.getQuality().equals("480p")
-                ||request.getQuality().equals("720p")
-                ||request.getQuality().equals("720p60")
-                ||request.getQuality().equals("1080p")
-                ||request.getQuality().equals("1080p60")
-                ||request.getQuality().equals("1440p")
-                ||request.getQuality().equals("1440p60")
-                ||request.getQuality().equals("2160p")
-                ||request.getQuality().equals("2160p60"))) {
-            return new DownloadResponse(false, "bad quality");
-        }
-
         Link link = linkRepository.findByBrowserToken(request.getBrowserToken());
         if(link == null){
             return new DownloadResponse(false, "browserToken not Found");
@@ -150,7 +133,7 @@ public class BrowserExtensionController {
         Download download = new Download();
         download.setDeviceToken(link.getDeviceToken());
         download.setTitle(request.getTitle());
-        download.setQuality(request.getQuality());
+        download.setQuality(request.getQuality().toString());
         download.setVideoId(request.getVideoId());
         download.setAuthor(request.getAuthor());
         downloadRepository.save(download);
