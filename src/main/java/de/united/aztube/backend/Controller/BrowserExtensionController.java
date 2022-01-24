@@ -6,25 +6,17 @@ import de.united.aztube.backend.Model.StatusRequest;
 import de.united.aztube.backend.Model.StatusResponse;
 import de.united.aztube.backend.Model.RegisterRequest;
 import de.united.aztube.backend.Model.RegisterResponse;
-import de.united.aztube.backend.Database.Link;
-import de.united.aztube.backend.Database.LinkRepository;
-import de.united.aztube.backend.Database.StatusDB;
-import de.united.aztube.backend.Database.StatusCodeRepository;
-import de.united.aztube.backend.Model.*;
 import de.united.aztube.backend.Database.*;
+import de.united.aztube.backend.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

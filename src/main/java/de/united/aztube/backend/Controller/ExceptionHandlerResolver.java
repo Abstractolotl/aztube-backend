@@ -1,6 +1,7 @@
 package de.united.aztube.backend.Controller;
 
 import de.united.aztube.backend.Model.ErrorResponse;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,8 +15,8 @@ import java.util.Arrays;
 @ControllerAdvice
 public class ExceptionHandlerResolver {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public @ResponseBody  ErrorResponse handleException(MethodArgumentNotValidException ex){
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    public @ResponseBody  ErrorResponse handleException(Exception ex){
         ErrorResponse response = new ErrorResponse();
         response.setError("Bad Request: Malformed. " + ex.getMessage());
 
