@@ -1,6 +1,6 @@
 package de.united.aztube.backend.Model;
 
-import de.united.aztube.backend.database.Download;
+import de.united.aztube.backend.Database.Download;
 
 import java.util.List;
 

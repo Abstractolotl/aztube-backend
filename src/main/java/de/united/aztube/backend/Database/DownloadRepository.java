@@ -1,6 +1,5 @@
-package de.united.aztube.backend.database;
+package de.united.aztube.backend.Database;
 
-import de.united.aztube.backend.Model.DownloadRequest;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
