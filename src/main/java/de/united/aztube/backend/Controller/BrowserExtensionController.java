@@ -123,8 +123,7 @@ public class BrowserExtensionController {
     }
 
     @PostMapping(path = "/download")
-    public @ResponseBody
-    DownloadResponse download(@RequestBody @Valid DownloadRequest request) {
+    public @ResponseBody DownloadResponse download(@RequestBody @Valid DownloadRequest request) {
         Link link = linkRepository.findByBrowserToken(request.getBrowserToken());
         if(link == null){
             return new DownloadResponse(false, "browserToken not Found");
@@ -141,8 +140,7 @@ public class BrowserExtensionController {
     }
 
     @GetMapping(path = "/poll/{deviceToken}")
-    public @ResponseBody
-    PollResponse poll(@PathVariable UUID deviceToken) {
+    public @ResponseBody PollResponse poll(@PathVariable UUID deviceToken) {
         Link link = linkRepository.findByDeviceToken(deviceToken.toString());
         if(link == null) {
             StatusDB db = statusCodeRepository.findByDeviceToken(deviceToken.toString());
@@ -153,7 +151,7 @@ public class BrowserExtensionController {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(deviceToken.toString());
         downloadRepository.findAll()
                 .stream().filter(x -> (x.getDeviceToken().equals(deviceToken.toString())))
-                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadId());
+                .forEach(x -> {downloadRepository.deleteById(x.getDownloadId());
                 System.out.println("Download request number: " + x.getDownloadId() + "was deleted");});
         if (downloads.isEmpty()) return new PollResponse(false , downloads , "no entry in database");
         return new PollResponse(true , downloads , null);
