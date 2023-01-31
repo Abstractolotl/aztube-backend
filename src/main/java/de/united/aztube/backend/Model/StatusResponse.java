@@ -1,7 +1,5 @@
 package de.united.aztube.backend.Model;
 
-import java.util.UUID;
-
 public class StatusResponse {
 
     private boolean success;

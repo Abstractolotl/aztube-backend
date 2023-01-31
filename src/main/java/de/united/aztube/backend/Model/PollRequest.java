@@ -6,7 +6,7 @@ public class PollRequest {
     String deviceToken;
 
     public PollRequest(String code) {
-        this.deviceToken = deviceToken;
+        this.deviceToken = code;
     }
 
     public PollRequest() {}

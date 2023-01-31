@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -13,6 +12,8 @@ public class BackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
+
+    
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
