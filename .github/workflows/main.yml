@@ -21,7 +21,7 @@ jobs:
       run: |
         echo $HARBOR_PASSWORD | docker login harbor.ancozockt.info -u tool-gitlab --password-stdin
       env:
-        CR_PAT: ${{ secrets.HARBOR_PASSWORD }}
+        HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
         
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag harbor.ancozockt.info/abstractolotl/aztube-backend:$(echo $(date +%s)) --tag harbor.ancozockt.info/abstractolotl/aztube-backend:latest
