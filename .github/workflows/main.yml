@@ -1,0 +1,29 @@
+name: Build Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v1
+      with:
+        java-version: 17
+    - name: Build and test project with Maven
+      run: mvn clean install
+      
+    - name: Login to Github Docker Registry
+      run: |
+        echo $HARBOR_PASSWORD | docker login harbor.ancozockt.info -u tool-gitlab --password-stdin
+      env:
+        CR_PAT: ${{ secrets.HARBOR_PASSWORD }}
+        
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag harbor.ancozockt.info/abstractolotl/aztube-backend:$(echo $(date +%s)) --tag harbor.ancozockt.info/abstractolotl/aztube-backend:latest
+    - name: Push the Docker image
+      run: docker push harbor.ancozockt.info/abstractolotl/aztube-backend --all-tags
