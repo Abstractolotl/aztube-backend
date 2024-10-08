@@ -1,17 +1,23 @@
-package de.united.aztube.backend.Controller;
+package de.united.aztube.backend.controller;
 
 
-import de.united.aztube.backend.Model.GenerateRespose;
-import de.united.aztube.backend.Model.StatusRequest;
-import de.united.aztube.backend.Model.StatusResponse;
-import de.united.aztube.backend.Model.RegisterRequest;
-import de.united.aztube.backend.Model.RegisterResponse;
-import de.united.aztube.backend.Database.Link;
-import de.united.aztube.backend.Database.LinkRepository;
-import de.united.aztube.backend.Database.StatusDB;
-import de.united.aztube.backend.Database.StatusCodeRepository;
-import de.united.aztube.backend.Model.*;
-import de.united.aztube.backend.Database.*;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
+import de.united.aztube.backend.model.GenerateRespose;
+import de.united.aztube.backend.model.StatusRequest;
+import de.united.aztube.backend.model.StatusResponse;
+import de.united.aztube.backend.model.RegisterRequest;
+import de.united.aztube.backend.model.RegisterResponse;
+import de.united.aztube.backend.database.Link;
+import de.united.aztube.backend.database.LinkRepository;
+import de.united.aztube.backend.database.StatusDB;
+import de.united.aztube.backend.database.StatusCodeRepository;
+import de.united.aztube.backend.model.*;
+import de.united.aztube.backend.database.*;
+import io.micrometer.core.instrument.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @RestController
 @EnableScheduling
 public class BrowserExtensionController {
@@ -29,6 +36,7 @@ public class BrowserExtensionController {
     private @Autowired StatusCodeRepository statusCodeRepository;
     private @Autowired LinkRepository linkRepository;
     private @Autowired DownloadRepository downloadRepository;
+    private @Autowired FirebaseMessaging firebaseMessaging;
 
     @GetMapping(path = "/generate")
         public GenerateRespose generate() {
@@ -71,11 +79,11 @@ public class BrowserExtensionController {
         UUID deviceToken = UUID.randomUUID();
         entry.setDeviceToken(deviceToken.toString());
         entry.setDeviceName(request.getDeviceName());
+        entry.setFirebaseToken(request.getFirebaseToken());
         entry.setStatus("registered");
         statusCodeRepository.save(entry);
 
-        RegisterResponse response = new RegisterResponse(true, "", deviceToken);
-        return response;
+        return new RegisterResponse(true, "", deviceToken);
     }
 
     @PostMapping(path = "/unregister")
@@ -100,7 +108,7 @@ public class BrowserExtensionController {
     public @ResponseBody StatusResponse status(@RequestBody StatusRequest request) {
         statusCodeRepository.findAll().stream()
                 .filter(x -> (System.currentTimeMillis() - x.getTimestamp() > (timeout * 1000)))
-                .collect(Collectors.toList()).forEach(x -> {
+                .toList().forEach(x -> {
                     statusCodeRepository.deleteById(x.getId());
                     System.out.println("entry number: " + x.getId() + " timed out");});
         StatusDB statusDB = statusCodeRepository.findByCode(request.getCode());
@@ -113,7 +121,12 @@ public class BrowserExtensionController {
             if(statusDB.getDeviceToken() == null || statusDB.getDeviceName() == null || statusDB.getDeviceName().trim().equals("")) {
                 return new StatusResponse(false , null, null, null, "Integrity error");
             }
-            Link link = new Link(browserToken.toString(), statusDB.getDeviceToken(), statusDB.getDeviceName(), System.currentTimeMillis());
+            Link link = new Link();
+            link.setBrowserToken(browserToken.toString());
+            link.setTimestamp(System.currentTimeMillis());
+            link.setDeviceToken(statusDB.getDeviceToken());
+            link.setDeviceName(statusDB.getDeviceName());
+            link.setFirebaseToken(statusDB.getFirebaseToken());
             linkRepository.save(link);
 
             return new StatusResponse(true, statusDB.getStatus(), browserToken.toString(), statusDB.getDeviceName(), null);
@@ -154,6 +167,21 @@ public class BrowserExtensionController {
         download.setVideoId(request.getVideoId());
         download.setAuthor(request.getAuthor());
         downloadRepository.save(download);
+
+        if (StringUtils.isNotEmpty(link.getFirebaseToken())) {
+            try {
+                firebaseMessaging.send(Message.builder()
+                        .setToken(link.getFirebaseToken())
+                        .setNotification(Notification.builder()
+                                .setTitle("New Download")
+                                .setBody("New download is available: " + request.getTitle())
+                                .build())
+                        .build());
+            } catch (FirebaseMessagingException e) {
+                log.error("Could not send Firebase Message", e);
+            }
+        }
+
         return new DownloadResponse(true, null);
     }
 
@@ -170,8 +198,8 @@ public class BrowserExtensionController {
         List<Download> downloads = downloadRepository.findAllByDeviceToken(deviceToken.toString());
         downloadRepository.findAll()
                 .stream().filter(x -> (x.getDeviceToken().equals(deviceToken.toString())))
-                .collect(Collectors.toList()).forEach(x -> {downloadRepository.deleteById(x.getDownloadId());
-                System.out.println("Download request number: " + x.getDownloadId() + "was deleted");});
+                .toList().forEach(x -> {downloadRepository.deleteById(x.getDownloadId());
+                System.out.println("Download request number: " + x.getDownloadId() + " was deleted");});
         if (downloads.isEmpty()) return new PollResponse(false , downloads , "no entry in database");
         return new PollResponse(true , downloads , null);
     }

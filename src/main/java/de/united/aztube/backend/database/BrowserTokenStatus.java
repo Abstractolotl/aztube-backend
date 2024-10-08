@@ -1,4 +1,4 @@
-package de.united.aztube.backend.Database;
+package de.united.aztube.backend.database;
 
 import java.util.UUID;
 

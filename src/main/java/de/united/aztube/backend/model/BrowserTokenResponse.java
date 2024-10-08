@@ -1,6 +1,6 @@
-package de.united.aztube.backend.Model;
+package de.united.aztube.backend.model;
 
-import de.united.aztube.backend.Database.BrowserTokenStatus;
+import de.united.aztube.backend.database.BrowserTokenStatus;
 
 import java.util.List;
 

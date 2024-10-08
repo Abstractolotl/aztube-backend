@@ -1,4 +1,4 @@
-package de.united.aztube.backend.Controller;
+package de.united.aztube.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
 
