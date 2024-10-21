@@ -12,7 +12,7 @@
 
 	<groupId>de.united.aztube</groupId>
 	<artifactId>backend</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>Backend</name>
 	<description>Backend for AzTube</description>
 
