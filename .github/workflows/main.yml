@@ -69,7 +69,7 @@ jobs:
             IMAGE=${{env.IMAGE_NAME}}
             IMAGE=${{ env.REGISTRY }}/${IMAGE,,}:${{ github.ref_name }}
             echo "Docker Image: ${IMAGE}"
-            echo ${{ GHCR_PASSWORD }} | docker login ghcr.io -u ${{ secrets.GHCR_USER }} --password-stdin
+            echo ${{ secrets.GHCR_PASSWORD }} | docker login ghcr.io -u ${{ secrets.GHCR_USER }} --password-stdin
             docker pull ${IMAGE}
             docker stop ${{ env.CONTAINER_NAME }} || true
             docker rm ${{ env.CONTAINER_NAME }} || true
