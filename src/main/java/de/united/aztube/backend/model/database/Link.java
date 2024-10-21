@@ -1,8 +1,10 @@
-package de.united.aztube.backend.database;
+package de.united.aztube.backend.model.database;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -13,8 +15,10 @@ public class Link {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
 
-    private String browserToken;
-    private String deviceToken;
+    @Type(type = "uuid-char")
+    private UUID browserToken;
+    @Type(type = "uuid-char")
+    private UUID deviceToken;
     private String deviceName;
     private String firebaseToken;
     private long timestamp;

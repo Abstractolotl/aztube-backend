@@ -1,15 +1,15 @@
 package de.united.aztube.backend.database;
 
+import de.united.aztube.backend.model.database.PendingLink;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import java.util.UUID;
 
-public interface StatusCodeRepository extends CrudRepository<StatusDB, Integer> {
+public interface StatusCodeRepository extends CrudRepository<PendingLink, Integer> {
 
-    StatusDB findByCode(String code);
-    StatusDB findByDeviceToken(String deviceToken);
+    PendingLink findByCode(UUID code);
+    PendingLink findByDeviceToken(UUID deviceToken);
 
-    @Override
-    List<StatusDB> findAll();
+    void deleteAllByTimestampLessThan(long timestamp);
 
 }

@@ -1,4 +1,4 @@
-package de.united.aztube.backend.database.Configuration;
+package de.united.aztube.backend.spring;
 
 import javax.sql.DataSource;
 

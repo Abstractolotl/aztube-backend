@@ -1,4 +1,4 @@
-package de.united.aztube.backend.model;
+package de.united.aztube.backend.model.aztube;
 
 import lombok.Data;
 
