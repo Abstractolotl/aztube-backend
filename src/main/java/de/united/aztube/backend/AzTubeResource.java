@@ -18,7 +18,6 @@ import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -31,22 +30,22 @@ public class AzTubeResource {
 
     private static final int CODE_TIMEOUT = 30;
 
-    private final StatusCodeRepository statusCodeRepository;
+    private final StatusCodeRepository pendingLinkRepository;
     private final LinkRepository linkRepository;
     private final DownloadRepository downloadRepository;
     private final FirebaseMessaging firebaseMessaging;
 
     @GetMapping("/info")
     public String info() {
-        long countPendingLink = statusCodeRepository.count();
-        long countLinks = linkRepository.count();
+        long countPendingLink = pendingLinkRepository.count();
+        long countDeviceLinks = linkRepository.count();
         long countDownlods = downloadRepository.count();
 
         return String.format("""
                 Device Links: %s
                 Pending Links: %s
                 Pending Downloads: %s
-                """, countPendingLink, countLinks, countDownlods);
+                """, countDeviceLinks, countPendingLink, countDownlods);
     }
 
     @GetMapping("/generate")
@@ -55,7 +54,7 @@ public class AzTubeResource {
         statusDB.setCode(UUID.randomUUID());
         statusDB.setTimestamp(System.currentTimeMillis());
         statusDB.setStatus(PendingLinkStatus.GENERATED);
-        statusCodeRepository.save(statusDB);
+        pendingLinkRepository.save(statusDB);
 
         return new GenerateResponse(true, statusDB.getCode(), 30);
     }
@@ -80,7 +79,7 @@ public class AzTubeResource {
 
     @PostMapping(path = "/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {
-        PendingLink entry = statusCodeRepository.findByCode(request.getCode());
+        PendingLink entry = pendingLinkRepository.findByCode(request.getCode());
 
         if(entry == null) {
             return new RegisterResponse(false, "no such entry", null);
@@ -93,7 +92,7 @@ public class AzTubeResource {
         entry.setDeviceName(request.getDeviceName());
         entry.setFirebaseToken(request.getFirebaseToken());
         entry.setStatus(PendingLinkStatus.REGISTERED);
-        statusCodeRepository.save(entry);
+        pendingLinkRepository.save(entry);
 
         return new RegisterResponse(true, "", entry.getDeviceToken());
     }
@@ -116,7 +115,7 @@ public class AzTubeResource {
     public StatusResponse status(@RequestBody StatusRequest request) {
         StatusResponse response = new StatusResponse();
 
-        PendingLink pendingLink = statusCodeRepository.findByCode(request.getCode());
+        PendingLink pendingLink = pendingLinkRepository.findByCode(request.getCode());
         if(pendingLink == null){
             response.setSuccess(false);
             response.setError("no entry in database");
@@ -143,7 +142,7 @@ public class AzTubeResource {
         link.setFirebaseToken(pendingLink.getFirebaseToken());
         linkRepository.save(link);
 
-        statusCodeRepository.delete(pendingLink);
+        pendingLinkRepository.delete(pendingLink);
 
         response.setSuccess(true);
         response.setStatus(pendingLink.getStatus());
@@ -200,7 +199,7 @@ public class AzTubeResource {
 
         List<Download> downloads = downloadRepository.findAllByDeviceToken(deviceToken);
         if (downloads.isEmpty()) {
-            return new PollResponse(false ,"no entry in database", null);
+            return new PollResponse(false ,"no entry in database", List.of());
         }
 
         downloadRepository.deleteAll(downloads);
