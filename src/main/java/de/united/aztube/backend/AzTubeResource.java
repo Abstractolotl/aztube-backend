@@ -36,7 +36,20 @@ public class AzTubeResource {
     private final DownloadRepository downloadRepository;
     private final FirebaseMessaging firebaseMessaging;
 
-    @GetMapping(path = "/generate")
+    @GetMapping("/info")
+    public String info() {
+        long countPendingLink = statusCodeRepository.count();
+        long countLinks = linkRepository.count();
+        long countDownlods = downloadRepository.count();
+
+        return String.format("""
+                Device Links: %s
+                Pending Links: %s
+                Pending Downloads: %s
+                """, countPendingLink, countLinks, countDownlods);
+    }
+
+    @GetMapping("/generate")
     public GenerateResponse generate() {
         PendingLink statusDB = new PendingLink();
         statusDB.setCode(UUID.randomUUID());
@@ -129,6 +142,7 @@ public class AzTubeResource {
         link.setDeviceName(pendingLink.getDeviceName());
         link.setFirebaseToken(pendingLink.getFirebaseToken());
         linkRepository.save(link);
+
         statusCodeRepository.delete(pendingLink);
 
         response.setSuccess(true);
