@@ -116,7 +116,7 @@ public class AzTubeResource {
             return response;
         }
 
-        if(pendingLink.getDeviceToken() != null || StringUtils.isNotBlank(pendingLink.getDeviceName())) {
+        if(pendingLink.getDeviceToken() == null || StringUtils.isBlank(pendingLink.getDeviceName())) {
             response.setSuccess(false);
             response.setError("Integrity error");
             return response;
