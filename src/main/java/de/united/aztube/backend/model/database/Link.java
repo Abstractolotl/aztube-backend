@@ -22,4 +22,6 @@ public class Link {
     private String deviceName;
     private String firebaseToken;
     private long timestamp;
+    private long lastUsed;
+
 }

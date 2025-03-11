@@ -18,35 +18,20 @@ import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @Slf4j
 @RestController
-@EnableScheduling
 @RequiredArgsConstructor
 public class AzTubeResource {
-
-    private static final int CODE_TIMEOUT = 30;
 
     private final StatusCodeRepository pendingLinkRepository;
     private final LinkRepository linkRepository;
     private final DownloadRepository downloadRepository;
     private final FirebaseMessaging firebaseMessaging;
-
-    @GetMapping("/info")
-    public String info() {
-        long countPendingLink = pendingLinkRepository.count();
-        long countDeviceLinks = linkRepository.count();
-        long countDownlods = downloadRepository.count();
-
-        return String.format("""
-                Device Links: %s
-                Pending Links: %s
-                Pending Downloads: %s
-                """, countDeviceLinks, countPendingLink, countDownlods);
-    }
 
     @GetMapping("/generate")
     public GenerateResponse generate() {
@@ -151,11 +136,6 @@ public class AzTubeResource {
         return response;
     }
 
-//    @Scheduled(fixedDelay = 1000 * 60 * 60) //Every hour
-//    public void cleanStatusCodes() {
-//        statusCodeRepository.deleteAllByTimestampLessThan(System.currentTimeMillis() - CODE_TIMEOUT * 1000L);
-//    }
-
     @PostMapping(path = "/download")
     public @ResponseBody
     DownloadResponse download(@RequestBody DownloadRequest request) {
@@ -193,6 +173,10 @@ public class AzTubeResource {
     public @ResponseBody
     PollResponse poll(@PathVariable UUID deviceToken) {
         Link link = linkRepository.findByDeviceToken(deviceToken);
+
+        link.setLastUsed(System.currentTimeMillis());
+        linkRepository.save(link);
+
         if(link == null) {
             return new PollResponse(false, "deviceToken does not exist", null);
         }

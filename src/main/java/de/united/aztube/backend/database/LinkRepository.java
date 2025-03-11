@@ -13,5 +13,6 @@ public interface LinkRepository extends CrudRepository<Link, Integer> {
     List<Link> findByBrowserTokenIn(List<UUID> browserTokens);
 
     void deleteByDeviceToken(UUID deviceToken);
+    void deleteAllByLastUsedLessThan(long timestamp);
 
 }
