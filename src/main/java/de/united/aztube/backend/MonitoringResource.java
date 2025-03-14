@@ -6,6 +6,7 @@ import de.united.aztube.backend.database.StatusCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class MonitoringResource {
                 """, countDeviceLinks, countPendingLink, countDownlods);
     }
 
-
+    @Transactional
     @Scheduled(fixedDelay = 1000 * 60 * 60) //Every hour
     public void cleanStatusCodes() {
         pendingLinkRepository.deleteAllByTimestampLessThan(System.currentTimeMillis() - 1000L * 30);

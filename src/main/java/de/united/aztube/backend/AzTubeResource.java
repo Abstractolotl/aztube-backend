@@ -77,6 +77,7 @@ public class AzTubeResource {
         entry.setDeviceName(request.getDeviceName());
         entry.setFirebaseToken(request.getFirebaseToken());
         entry.setStatus(PendingLinkStatus.REGISTERED);
+        entry.setTimestamp(System.currentTimeMillis());
         pendingLinkRepository.save(entry);
 
         return new RegisterResponse(true, "", entry.getDeviceToken());
